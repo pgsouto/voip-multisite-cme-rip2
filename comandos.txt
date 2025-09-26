@@ -10,50 +10,33 @@ Router1A(config)#
 Router1A(config)#interface fa0/0
 Router1A(config-if)#no ip address
 Router1A(config-if)#no shutdown
-
-Router1A(config-if)#
-%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
-
-%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
-
-Router1A(config-if)#
 Router1A(config-if)#exit
+
 Router1A(config)#interface fa0/0.10
-Router1A(config-subif)#
-%LINK-5-CHANGED: Interface FastEthernet0/0.10, changed state to up
-
-%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0.10, changed state to up
-
-Router1A(config-subif)#encapsulation dotlq 10
-                                        ^
-% Invalid input detected at '^' marker.
-	
 Router1A(config-subif)#encapsulation dot1q 10
 Router1A(config-subif)#ip address 192.168.10.1 255.255.255.0
 Router1A(config-subif)#exit
-Router1A(config)#
+
 Router1A(config)#interface fa0/0.20
-Router1A(config-subif)#
-%LINK-5-CHANGED: Interface FastEthernet0/0.20, changed state to up
-
-%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0.20, changed state to up
-
 Router1A(config-subif)#encapsulation dot1q 20
 Router1A(config-subif)#ip address 192.168.20.1 255.255.255.0
 Router1A(config-subif)#exit
+
 Router1A(config)#ip dhcp excluded-address 192.168.10.1 192.168.10.10
 Router1A(config)#ip dhcp excluded-address 192.168.20.1 192.168.20.10
+
 Router1A(config)#ip dhcp pool VOICE
 Router1A(dhcp-config)#network 192.168.10.0 255.255.255.0
 Router1A(dhcp-config)#default-router 192.168.10.1
 Router1A(dhcp-config)#option 150 ip 192.168.10.1
 Router1A(dhcp-config)#exit
+
 Router1A(config)#ip dhcp pool DATA
 Router1A(dhcp-config)#network 192.168.20.0 255.255.255.0
 Router1A(dhcp-config)#default-router 192.168.20.1
 Router1A(dhcp-config)#option 150 ip 192.168.20.1
 Router1A(dhcp-config)#exit
-Router1A(config)#
+
 Router1A(config)#telephony-service
 Router1A(config-telephony)#max-ephones 2
 Router1A(config-telephony)#max-dn 2
@@ -83,9 +66,73 @@ Router1A(config)#end
 Router1A#
 %SYS-5-CONFIG_I: Configured from console by console
 
+Router1A>enable
+Router1A#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router1A(config)#telephony-service
+Router1A(config-telephony)#max-ephones 4
+Router1A(config-telephony)#max-dn 4
+Router1A(config-telephony)#auto assign 1 to 4
+Router1A(config-telephony)#exit
+Router1A(config)#ephone-dn 3
+Router1A(config-ephone-dn)#%LINK-3-UPDOWN: Interface ephone_dsp DN 3.1, changed state to up
+
+Router1A(config-ephone-dn)#number 2001
+Router1A(config-ephone-dn)#exit
+Router1A(config)#ephone-dn 4
+Router1A(config-ephone-dn)#%LINK-3-UPDOWN: Interface ephone_dsp DN 4.1, changed state to up
+
+Router1A(config-ephone-dn)#number 2002
+Router1A(config-ephone-dn)#exit
+Router1A(config)#end
+Router1A#
+%SYS-5-CONFIG_I: Configured from console by console
+
 Router1A#wr mem
 Building configuration...
 [OK]
+
+
+Router1A>enable 
+Router1A#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router1A(config)#router rip
+Router1A(config-router)#version 2
+Router1A(config-router)#network 192.168.10.0
+Router1A(config-router)#network 192.168.20.0
+Router1A(config-router)#network 10.0.0.0
+Router1A(config-router)#no auto-summary
+Router1A(config-router)#
+Router1A(config-router)#exit
+Router1A(config)#end
+Router1A#
+%SYS-5-CONFIG_I: Configured from console by console
+
+Router1A#wr mem
+Building configuration...
+[OK]
+
+Router1A#
+Router1A#interface fa0/1
+                   ^
+% Invalid input detected at '^' marker.
+	
+Router1A#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router1A(config)#interface fa0/1
+Router1A(config-if)#ip address 10.0.0.1 255.255.255.252
+Router1A(config-if)#no shutdown
+
+Router1A(config-if)#
+%LINK-5-CHANGED: Interface FastEthernet0/1, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to up
+
+Router1A(config-if)#exit
+Router1A(config)#
+Router1A#
+%SYS-5-CONFIG_I: Configured from console by console
+
 
 !Cofiguração do SWITCH da filial A
 Switch>enable
@@ -152,3 +199,168 @@ Building configuration...
 SW-1A#
 
 !lembrar de configurar ip configuration dos PCs para DHCP e ligar os cabos de energia dos ip phones
+
+!configuração de roteador da filial B
+
+Router>enable
+Router#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname Router1B
+Router1B(config)#no ip domain-lookup
+Router1B(config)#interface fa0/0
+Router1B(config-if)#no ip address
+Router1B(config-if)#no shutdown
+
+Router1B(config-if)#
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+
+Router1B(config-if)#interface fa0/0.10
+Router1B(config-subif)#
+%LINK-5-CHANGED: Interface FastEthernet0/0.10, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0.10, changed state to up
+
+Router1B(config-subif)#encapsulation dot1q 10
+Router1B(config-subif)#ip address 192.168.110.1 255.255.255.0
+Router1B(config-subif)#exit
+Router1B(config)#interface fa0/0.20
+Router1B(config-subif)#
+%LINK-5-CHANGED: Interface FastEthernet0/0.20, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0.20, changed state to up
+
+Router1B(config-subif)#ip address 192.168.120.1 255.255.255.0
+
+% Configuring IP routing on a LAN subinterface is only allowed if that
+subinterface is already configured as part of an IEEE 802.10, IEEE 802.1Q,
+or ISL vLAN.
+
+Router1B(config-subif)#encapsulation dot1q 20
+Router1B(config-subif)#ip address 192.168.120.1 255.255.255.0
+Router1B(config-subif)#exit
+Router1B(config)#
+Router1B(config)#ip dhcp excluded-address 192.168.110.1 192.168.110.10
+Router1B(config)#ip dhcp excluded-address 192.168.120.1 192.168.120.10
+Router1B(config)#
+Router1B(config)#ip dhcp pool VOICE 
+Router1B(dhcp-config)# network 192.168.110.0 255.255.255.0
+Router1B(dhcp-config)# default-router 192.168.110.1
+Router1B(dhcp-config)# option 150 ip 192.168.10.1 
+Router1B(dhcp-config)#exit
+Router1B(config)#
+Router1B(config)#ip dhcp pool DATA 
+Router1B(dhcp-config)# network 192.168.120.0 255.255.255.0
+Router1B(dhcp-config)# default-router 192.168.120.1
+Router1B(dhcp-config)#exit
+Router1B(config)#end 
+Router1B#
+%SYS-5-CONFIG_I: Configured from console by console
+
+Router1B#wr mem
+Building configuration...
+[OK]
+Router1B#
+Router1B>enable
+Router1B#
+Router1B#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router1B(config)#interface FastEthernet0/0
+Router1B(config-if)#
+Router1B(config-if)#exit
+Router1B(config)#interface FastEthernet0/1
+Router1B(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to up
+
+Router1B(config-if)#exit
+Router1B(config)#interface f0/1
+Router1B(config-if)#ip address 10.0.0.2 255.255.255.252
+Router1B(config-if)#no shutdown
+Router1B(config-if)#exit
+Router1B(config)#
+Router1B(config)#end
+Router1B#
+%SYS-5-CONFIG_I: Configured from console by console
+
+Router1B#wr mem
+Building configuration...
+[OK]
+Router1B#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router1B(config)#router rip
+Router1B(config-router)#version w
+                                ^
+% Invalid input detected at '^' marker.
+	
+Router1B(config-router)#version 2
+Router1B(config-router)#no auto-summary
+Router1B(config-router)#
+Router1B(config-router)#network 192.168.110.0
+Router1B(config-router)#network 192.168.120.0
+Router1B(config-router)#network 10.0.0.0
+Router1B(config-router)#exit
+Router1B(config)#end
+Router1B#
+%SYS-5-CONFIG_I: Configured from console by console
+
+Router1B#wr mem
+Building configuration...
+[OK]
+Router1B#
+
+! Switch filial B
+Switch>enable
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname SW-1B
+SW-1B(config)#vlan 10
+SW-1B(config-vlan)#name VOICE
+SW-1B(config-vlan)#vlan 20
+SW-1B(config-vlan)#name DATA
+SW-1B(config-vlan)#exit
+SW-1B(config)#interface fa0/24
+SW-1B(config-if)#switchport mode trunk 
+
+SW-1B(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/24, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/24, changed state to up
+
+SW-1B(config-if)#switchport trunk allowed vlan 10,20
+SW-1B(config-if)#exit
+SW-1B(config)#interface f0/1
+SW-1B(config-if)#switchport mode access
+SW-1B(config-if)#switchport access vlan 20
+SW-1B(config-if)#switchport voice vlan 10
+SW-1B(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+host. Connecting hubs, concentrators, switches, bridges, etc... to this
+interface  when portfast is enabled, can cause temporary bridging loops.
+Use with CAUTION
+
+%Portfast has been configured on FastEthernet0/1 but will only
+have effect when the interface is in a non-trunking mode.
+SW-1B(config-if)#
+SW-1B(config-if)#exit
+SW-1B(config)#interface f0/2
+SW-1B(config-if)#switchport mode access
+SW-1B(config-if)#switchport access vlan 20
+SW-1B(config-if)#switchport voice vlan 10
+SW-1B(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+host. Connecting hubs, concentrators, switches, bridges, etc... to this
+interface  when portfast is enabled, can cause temporary bridging loops.
+Use with CAUTION
+
+%Portfast has been configured on FastEthernet0/2 but will only
+have effect when the interface is in a non-trunking mode.
+SW-1B(config-if)#exit
+SW-1B(config)#end
+SW-1B#
+%SYS-5-CONFIG_I: Configured from console by console
+
+SW-1B#wr mem
+Building configuration...
+[OK]
+SW-1B#
