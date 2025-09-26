@@ -1,0 +1,88 @@
+! Configuração do roteador 1A
+! Adição da placa NM-ESW-161
+
+Router>enable
+Router#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname Router1A
+Router1A(config)#no ip domain-lookup
+Router1A(config)#
+Router1A(config)#interface fa0/0
+Router1A(config-if)#no ip address
+Router1A(config-if)#no shutdown
+
+Router1A(config-if)#
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+
+Router1A(config-if)#
+Router1A(config-if)#exit
+Router1A(config)#interface fa0/0.10
+Router1A(config-subif)#
+%LINK-5-CHANGED: Interface FastEthernet0/0.10, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0.10, changed state to up
+
+Router1A(config-subif)#encapsulation dotlq 10
+                                        ^
+% Invalid input detected at '^' marker.
+	
+Router1A(config-subif)#encapsulation dot1q 10
+Router1A(config-subif)#ip address 192.168.10.1 255.255.255.0
+Router1A(config-subif)#exit
+Router1A(config)#
+Router1A(config)#interface fa0/0.20
+Router1A(config-subif)#
+%LINK-5-CHANGED: Interface FastEthernet0/0.20, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0.20, changed state to up
+
+Router1A(config-subif)#encapsulation dot1q 20
+Router1A(config-subif)#ip address 192.168.20.1 255.255.255.0
+Router1A(config-subif)#exit
+Router1A(config)#ip dhcp excluded-address 192.168.10.1 192.168.10.10
+Router1A(config)#ip dhcp excluded-address 192.168.20.1 192.168.20.10
+Router1A(config)#ip dhcp pool VOICE
+Router1A(dhcp-config)#network 192.168.10.0 255.255.255.0
+Router1A(dhcp-config)#default-router 192.168.10.1
+Router1A(dhcp-config)#option 150 ip 192.168.10.1
+Router1A(dhcp-config)#exit
+Router1A(config)#ip dhcp pool DATA
+Router1A(dhcp-config)#network 192.168.20.0 255.255.255.0
+Router1A(dhcp-config)#default-router 192.168.20.1
+Router1A(dhcp-config)#option 150 ip 192.168.20.1
+Router1A(dhcp-config)#exit
+Router1A(config)#
+Router1A(config)#telephony-service
+Router1A(config-telephony)#max-ephones 2
+Router1A(config-telephony)#max-dn 2
+Router1A(config-telephony)#ip source-address 192.168.10.1 port 2000
+Router1A(config-telephony)#auto-reg-ephone
+Router1A(config-telephony)#create cnf-files
+Creating CNF files
+CNF-FILES: Clock is not set or synchronized, retaining old versionStamp
+Router1A(config-telephony)#
+Router1A(config-telephony)#auto assign 1 to 2
+Router1A(config-telephony)#exit
+Router1A(config)#ephone dn 1
+                        ^
+% Invalid input detected at '^' marker.
+	
+Router1A(config)#ephone-dn 1
+Router1A(config-ephone-dn)#%LINK-3-UPDOWN: Interface ephone_dsp DN 1.1, changed state to up
+
+Router1A(config-ephone-dn)#number 1001
+Router1A(config-ephone-dn)#exit
+Router1A(config)#ephone-dn 2
+Router1A(config-ephone-dn)#%LINK-3-UPDOWN: Interface ephone_dsp DN 2.1, changed state to up
+
+Router1A(config-ephone-dn)#number 1002
+Router1A(config-ephone-dn)#exit
+Router1A(config)#end
+Router1A#
+%SYS-5-CONFIG_I: Configured from console by console
+
+Router1A#wr mem
+Building configuration...
+[OK]
